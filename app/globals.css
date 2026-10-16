@@ -1,0 +1,149 @@
+@import "tailwindcss";
+
+/* Awards (primary display face) — place the licensed file at public/fonts/Awards.woff2.
+   One file covers every weight so the browser never fakes a bold. */
+@font-face {
+  font-family: 'Awards';
+  src: url('/fonts/Awards.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Nohemi Regular */
+@font-face {
+  font-family: 'Nohemi';
+  src: url('/fonts/Nohemi-Regular-BF6a4e01a26b011.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Nohemi Medium */
+@font-face {
+  font-family: 'Nohemi';
+  src: url('/fonts/Nohemi-Medium-BF6a4e01a26b011.ttf') format('truetype');
+  font-weight: 500 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme inline {
+  --font-hero: 'Nohemi', system-ui, sans-serif;
+  --font-display: 'Nohemi', system-ui, sans-serif;
+  --font-sans: 'Nohemi', system-ui, sans-serif;
+  --font-mono: 'Nohemi', system-ui, sans-serif;
+}
+
+@layer base {
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+  }
+}
+
+:root {
+  --color-bg: #0B0202;
+  --color-burgundy: #790B20;
+  --color-crimson: #C90008;
+  --color-orange: #FF6900;
+  --color-amber: #FFA000;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: var(--color-bg);
+  color: #fff;
+  font-family: var(--font-sans);
+  font-weight: 400;
+}
+
+/* Custom scrollbar for content panels */
+.overflow-y-auto {
+  scrollbar-width: thin;
+  scrollbar-color: #790B20 transparent;
+}
+
+.overflow-y-auto::-webkit-scrollbar {
+  width: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #790B20;
+  border-radius: 2px;
+}
+
+/* Hide default cursor when custom cursor is active */
+@media (pointer: fine) {
+  * {
+    cursor: none !important;
+  }
+}
+
+@keyframes telemetry-scan {
+  0% { top: -4rem; }
+  100% { top: 100%; }
+}
+.telemetry-scan { animation: telemetry-scan 4s linear infinite; }
+
+@keyframes telemetry-pulse {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.9; }
+}
+.telemetry-pulse { animation: telemetry-pulse 2.4s ease-in-out infinite; }
+
+@keyframes telemetry-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0.15; }
+}
+.telemetry-blink { animation: telemetry-blink 1s steps(1) infinite; }
+
+/* Hero name — gradient slides in from left on hover */
+.hero-word {
+  display: block;
+  color: white;
+  background: linear-gradient(90deg, #FF6900 0%, #FFA000 55%, #C90008 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  background-size: 0% 100%;
+  background-repeat: no-repeat;
+  transition:
+    background-size 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    color 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    -webkit-text-fill-color 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.hero-word:hover {
+  background-size: 100% 100%;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Focus styles */
+*:focus-visible {
+  outline: 2px solid #FF6900;
+  outline-offset: 2px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
