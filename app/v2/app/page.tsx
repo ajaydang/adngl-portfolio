@@ -44,7 +44,7 @@ export default function V2Home() {
             <p>Based in Nepal</p>
           </div>
           <div className="v2-hero-bottom-cta">
-            <Link href="/v2/work" className="v2-animated-link">
+            <Link href="/v2/app/work" className="v2-animated-link">
               <span className="v2-link-content">
                 <span className="v2-link-text">
                   Explore My Work
@@ -62,7 +62,7 @@ export default function V2Home() {
             </Link>
           </div>
           <div className="v2-hero-bottom-cta">
-            <Link href="/v2/contact" className="v2-animated-link">
+            <Link href="/v2/app/contact" className="v2-animated-link">
               <span className="v2-link-content">
                 <span className="v2-link-text">
                   Contact Me

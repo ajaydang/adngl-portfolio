@@ -5,10 +5,10 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const NAV_ITEMS = [
-  { href: '/v2', label: 'Home' },
-  { href: '/v2/about', label: 'About' },
-  { href: '/v2/work', label: 'Work' },
-  { href: '/v2/contact', label: 'Contact' },
+  { href: '/v2/app', label: 'Home' },
+  { href: '/v2/app/about', label: 'About' },
+  { href: '/v2/app/work', label: 'Work' },
+  { href: '/v2/app/contact', label: 'Contact' },
 ];
 
 export default function V2Navigation() {
@@ -36,13 +36,13 @@ export default function V2Navigation() {
   }, [pathname, closeMobile]);
 
   const isActive = (href: string) =>
-    href === '/v2' ? pathname === '/v2' : pathname.startsWith(href);
+    href === '/v2/app' ? pathname === '/v2/app' : pathname.startsWith(href);
 
   return (
     <>
       <nav className="v2-nav" role="navigation" aria-label="V2 portfolio navigation">
         <Link
-          href="/v2"
+          href="/v2/app"
           className="v2-nav-logo-wrap"
           aria-label="Home"
           onMouseEnter={() => setLogoHovered(true)}
