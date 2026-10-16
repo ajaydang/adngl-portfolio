@@ -5,10 +5,10 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const NAV_ITEMS = [
-  { href: '/v2/app', label: 'Home' },
-  { href: '/v2/app/about', label: 'About' },
-  { href: '/v2/app/work', label: 'Work' },
-  { href: '/v2/app/contact', label: 'Contact' },
+  { href: '/v2', label: 'Home' },
+  { href: '/v2/about', label: 'About' },
+  { href: '/v2/work', label: 'Work' },
+  { href: '/v2/contact', label: 'Contact' },
 ];
 
 export default function V2Navigation() {
@@ -36,13 +36,13 @@ export default function V2Navigation() {
   }, [pathname, closeMobile]);
 
   const isActive = (href: string) =>
-    href === '/v2/app' ? pathname === '/v2/app' : pathname.startsWith(href);
+    href === '/v2' ? pathname === '/v2' : pathname.startsWith(href);
 
   return (
     <>
       <nav className="v2-nav" role="navigation" aria-label="V2 portfolio navigation">
         <Link
-          href="/v2/app"
+          href="/v2"
           className="v2-nav-logo-wrap"
           aria-label="Home"
           onMouseEnter={() => setLogoHovered(true)}
@@ -67,10 +67,6 @@ export default function V2Navigation() {
             </li>
           ))}
         </ul>
-
-        <Link href="/" className="v2-nav-back" aria-label="Return to original site">
-          ← V1 Site
-        </Link>
 
         <button
           className="v2-nav-toggle"
@@ -106,9 +102,6 @@ export default function V2Navigation() {
               {item.label}
             </Link>
           ))}
-          <Link href="/" onClick={closeMobile} style={{ fontSize: '1rem', color: 'var(--v2-text-dim)' }}>
-            ← Original Site
-          </Link>
         </div>
       )}
     </>
