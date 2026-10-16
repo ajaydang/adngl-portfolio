@@ -38,6 +38,10 @@ interface SceneProps {
   leaderLines: React.RefObject<(SVGPolylineElement | null)[]>;
   layout: React.RefObject<LeaderLayout>;
   reducedMotion: boolean;
+  palette?: [string, string, string, string];
+  lineColor?: string;
+  markColor?: string;
+  markColorLit?: string;
 }
 
 const dotVertex = /* glsl */ `
@@ -113,13 +117,15 @@ const markVertex = /* glsl */ `
 `;
 
 const markFragment = /* glsl */ `
+  uniform vec3 uMarkColor;
+  uniform vec3 uMarkColorLit;
   varying float vLit;
   void main() {
     float r = length(gl_PointCoord - 0.5);
     if (r > 0.5) discard;
     float core = smoothstep(0.22, 0.12, r);
     float ring = smoothstep(0.5, 0.44, r) * smoothstep(0.34, 0.4, r);
-    vec3 col = mix(vec3(1.0, 0.627, 0.0), vec3(1.0, 0.85, 0.6), vLit);
+    vec3 col = mix(uMarkColor, uMarkColorLit, vLit);
     gl_FragColor = vec4(col, max(core, ring * (0.55 + vLit * 0.45)));
   }
 `;
@@ -134,6 +140,10 @@ function PortraitScene({
   leaderLines,
   layout,
   reducedMotion,
+  palette = ['#790B20', '#C90008', '#FF6900', '#FFA000'],
+  lineColor = '#FF6900',
+  markColor = '#FF6900',
+  markColorLit = '#FFA000',
 }: SceneProps) {
   const groupRef = useRef<THREE.Group>(null);
   const dotMatRef = useRef<THREE.ShaderMaterial>(null);
@@ -164,15 +174,25 @@ function PortraitScene({
       uRadius: { value: 0.42 },
       uMotion: { value: reducedMotion ? 0 : 1 },
       uMouse: { value: new THREE.Vector2(9, 9) },
-      uC0: { value: new THREE.Color('#790B20') },
-      uC1: { value: new THREE.Color('#C90008') },
-      uC2: { value: new THREE.Color('#FF6900') },
-      uC3: { value: new THREE.Color('#FFA000') },
+      uC0: { value: new THREE.Color(palette[0]) },
+      uC1: { value: new THREE.Color(palette[1]) },
+      uC2: { value: new THREE.Color(palette[2]) },
+      uC3: { value: new THREE.Color(palette[3]) },
     }),
-    [reducedMotion]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [reducedMotion, palette.join(',')]
   );
 
-  const markUniforms = useMemo(() => ({ uPx: { value: 300 }, uCamZ: { value: CAM_Z } }), []);
+  const markUniforms = useMemo(
+    () => ({
+      uPx: { value: 300 },
+      uCamZ: { value: CAM_Z },
+      uMarkColor: { value: new THREE.Color(markColor) },
+      uMarkColorLit: { value: new THREE.Color(markColorLit) },
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [markColor, markColorLit]
+  );
 
   const markGeometry = useMemo(() => {
     const g = new THREE.BufferGeometry();
@@ -272,7 +292,7 @@ function PortraitScene({
         />
       </points>
       <lineSegments ref={linesRef} geometry={lineGeometry}>
-        <lineBasicMaterial color="#FF6900" transparent opacity={0.45} depthWrite={false} />
+        <lineBasicMaterial color={lineColor} transparent opacity={0.45} depthWrite={false} />
       </lineSegments>
       <points ref={markRef} geometry={markGeometry}>
         <shaderMaterial

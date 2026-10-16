@@ -4,6 +4,8 @@ import { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { buildParticleGeometry, buildConnectionLines, generateRibbonPoints } from '@/lib/particle-utils';
+import { resolveBlending } from '@/lib/themes';
+import type { Theme } from '@/lib/themes';
 
 const vertexShader = `
   attribute float size;
@@ -60,17 +62,20 @@ const fragmentShader = `
 
 interface ParticleFieldProps {
   particleCount: number;
+  theme: Theme;
 }
 
-export function ParticleField({ particleCount }: ParticleFieldProps) {
+export function ParticleField({ particleCount, theme }: ParticleFieldProps) {
   const pointsRef = useRef<THREE.Points>(null);
   const linesRef = useRef<THREE.LineSegments>(null);
   const timeRef = useRef(0);
-  const mouseRef = useRef(new THREE.Vector2(0, 0));
+
+  const paletteKey = theme.scene.particlePalette.join(',');
+  const blending = resolveBlending(theme);
 
   const { geometry, lineGeometry, uniforms } = useMemo(() => {
     const points = generateRibbonPoints(particleCount);
-    const geo = buildParticleGeometry(points);
+    const geo = buildParticleGeometry(points, theme.scene.particlePalette);
 
     const { positions, count } = buildConnectionLines(points, 0.52, 2000);
     const lineGeo = new THREE.BufferGeometry();
@@ -84,7 +89,8 @@ export function ParticleField({ particleCount }: ParticleFieldProps) {
     };
 
     return { geometry: geo, lineGeometry: lineGeo, uniforms: unis };
-  }, [particleCount]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [particleCount, paletteKey]);
 
   const material = useMemo(
     () =>
@@ -94,29 +100,30 @@ export function ParticleField({ particleCount }: ParticleFieldProps) {
         uniforms,
         transparent: true,
         depthWrite: false,
-        blending: THREE.AdditiveBlending,
+        blending,
         vertexColors: true,
       }),
-    [uniforms]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [uniforms, blending]
   );
 
   const lineMaterial = useMemo(
     () =>
       new THREE.LineBasicMaterial({
-        color: new THREE.Color('#C90008'),
+        color: new THREE.Color(theme.scene.lineColor),
         transparent: true,
         opacity: 0.12,
-        blending: THREE.AdditiveBlending,
+        blending,
         depthWrite: false,
       }),
-    []
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [theme.scene.lineColor, blending]
   );
 
   useFrame((state) => {
     timeRef.current = state.clock.elapsedTime;
     uniforms.uTime.value = timeRef.current;
 
-    // Slow overall rotation
     if (pointsRef.current) {
       pointsRef.current.rotation.y = timeRef.current * 0.04;
       pointsRef.current.rotation.x = Math.sin(timeRef.current * 0.025) * 0.08;

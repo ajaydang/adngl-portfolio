@@ -38,20 +38,15 @@ export function generateRibbonPoints(count: number): THREE.Vector3[] {
   return points;
 }
 
-export function buildParticleGeometry(points: THREE.Vector3[]) {
+const DEFAULT_PALETTE = ['#FF6900', '#FFA000', '#C90008', '#790B20', '#FF8C42'];
+
+export function buildParticleGeometry(points: THREE.Vector3[], paletteHex: string[] = DEFAULT_PALETTE) {
   const positions = new Float32Array(points.length * 3);
   const sizes = new Float32Array(points.length);
   const colors = new Float32Array(points.length * 3);
   const opacities = new Float32Array(points.length);
 
-  // Palette colors
-  const palette = [
-    new THREE.Color('#FF6900'), // vibrant orange
-    new THREE.Color('#FFA000'), // golden amber
-    new THREE.Color('#C90008'), // crimson red
-    new THREE.Color('#790B20'), // dark burgundy
-    new THREE.Color('#FF8C42'), // light orange
-  ];
+  const palette = paletteHex.map((h) => new THREE.Color(h));
 
   points.forEach((p, i) => {
     positions[i * 3] = p.x;

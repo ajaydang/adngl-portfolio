@@ -53,14 +53,14 @@ export function NavigationPreview({ hoveredNode }: NavigationPreviewProps) {
           transition={{ duration: 0.2 }}
           className="fixed bottom-24 left-1/2 -translate-x-1/2 z-30 pointer-events-none"
         >
-          <div className="bg-[#0B0202]/80 backdrop-blur-md border border-[#790B20]/40 rounded-lg px-6 py-4 min-w-[220px] text-center">
-            <p className="text-[#FF6900] text-xs tracking-[0.2em] uppercase font-medium mb-2">
+          <div className="bg-(--c-bg-95) backdrop-blur-md border border-(--c-border-40) rounded-lg px-6 py-4 min-w-[220px] text-center">
+            <p className="text-(--c-accent) text-xs tracking-[0.2em] uppercase font-medium mb-2">
               {preview.title}
             </p>
             {preview.lines.map((line, i) => (
               <p
                 key={i}
-                className={`text-sm ${i === 0 ? 'text-white/90' : 'text-white/50'} leading-relaxed`}
+                className={`text-sm leading-relaxed ${i === 0 ? 'text-(--c-text)' : 'text-(--c-text-muted)'}`}
               >
                 {line}
               </p>

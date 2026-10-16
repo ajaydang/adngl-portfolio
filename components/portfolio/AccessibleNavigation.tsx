@@ -58,22 +58,22 @@ function MenuWindow({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.25 }}
-      className="fixed inset-0 z-50 flex flex-col bg-[#0B0202]/95 backdrop-blur-md lg:hidden"
+      className="fixed inset-0 z-50 flex flex-col bg-(--c-bg-95) backdrop-blur-md lg:hidden"
     >
       <div className="flex items-center justify-between px-6 pt-6">
-        <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-[#FFA000]/70">Navigation</span>
+        <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-(--c-accentH-70)">Navigation</span>
         <button
           type="button"
           onClick={onClose}
           aria-label="Close menu"
-          className="flex h-10 w-10 items-center justify-center rounded border border-[#FF6900]/40 text-[#FF6900] focus-visible:outline-2 focus-visible:outline-[#FF6900] focus-visible:outline-offset-2"
+          className="flex h-10 w-10 items-center justify-center rounded border border-(--c-accent-40) text-(--c-accent)"
         >
           <X size={18} />
         </button>
       </div>
 
       <nav aria-label="Main navigation" className="flex flex-1 flex-col justify-center px-6">
-        <ul className="border-t border-white/10">
+        <ul className="border-t border-(--c-text-dim)">
           {navItems.map(({ id, label }, i) => {
             const active = activeSection === id;
             return (
@@ -82,7 +82,7 @@ function MenuWindow({
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.05 + i * 0.06, duration: 0.35 }}
-                className="border-b border-white/10"
+                className="border-b border-(--c-text-dim)"
               >
                 <button
                   type="button"
@@ -91,18 +91,18 @@ function MenuWindow({
                     onClose();
                   }}
                   aria-current={active ? 'page' : undefined}
-                  className="group flex w-full items-baseline gap-4 py-5 text-left focus-visible:outline-2 focus-visible:outline-[#FF6900] focus-visible:outline-offset-2"
+                  className="group flex w-full items-baseline gap-4 py-5 text-left"
                 >
-                  <span className="font-mono text-xs text-[#FFA000]/60">0{i + 1}</span>
+                  <span className="font-mono text-xs text-(--c-accentH-60)">0{i + 1}</span>
                   <span
                     className={`font-display text-4xl sm:text-5xl uppercase tracking-tight transition-colors ${
-                      active ? 'text-[#FF6900]' : 'text-white group-hover:text-[#FFA000]'
+                      active ? 'text-(--c-accent)' : 'text-(--c-text) group-hover:text-(--c-accentH)'
                     }`}
                   >
                     {label}
                   </span>
                   {active && (
-                    <span className="ml-auto h-2 w-2 self-center rounded-full bg-[#FF6900] shadow-[0_0_10px_#FF6900]" />
+                    <span className="ml-auto h-2 w-2 self-center rounded-full bg-(--c-accent) shadow-[0_0_10px_var(--c-accent)]" />
                   )}
                 </button>
               </motion.li>
@@ -111,8 +111,8 @@ function MenuWindow({
         </ul>
       </nav>
 
-      <div className="px-6 pb-8 font-mono text-xs text-white/40">
-        <a href={`mailto:${portfolioData.email}`} className="hover:text-[#FF6900]">
+      <div className="px-6 pb-8 font-mono text-xs text-(--c-text-dim)">
+        <a href={`mailto:${portfolioData.email}`} className="hover:text-(--c-accent)">
           {portfolioData.email}
         </a>
       </div>
@@ -137,10 +137,10 @@ export function AccessibleNavigation({ activeSection, onNavigate }: AccessibleNa
             key={id}
             onClick={() => onNavigate(id)}
             aria-current={activeSection === id ? 'page' : undefined}
-            className={`px-3 py-1.5 rounded text-xs tracking-[0.15em] uppercase transition-all duration-300 focus-visible:outline-2 focus-visible:outline-[#FF6900] focus-visible:outline-offset-2 ${
+            className={`px-3 py-1.5 rounded text-xs tracking-[0.15em] uppercase transition-all duration-300 ${
               activeSection === id
-                ? 'text-[#FF6900] bg-[#FF6900]/10 border border-[#FF6900]/30'
-                : 'text-white/40 hover:text-white/80 border border-transparent hover:border-[#790B20]/40'
+                ? 'text-(--c-accent) bg-(--c-accent-10) border border-(--c-accent-30)'
+                : 'text-(--c-text-muted) hover:text-(--c-text) border border-transparent hover:border-(--c-border-40)'
             }`}
           >
             {label}
@@ -155,7 +155,7 @@ export function AccessibleNavigation({ activeSection, onNavigate }: AccessibleNa
         aria-label="Open menu"
         aria-expanded={open}
         aria-controls="mobile-menu"
-        className="fixed top-6 right-6 z-40 flex h-10 items-center gap-2 rounded border border-[#FF6900]/40 bg-[#0B0202]/70 px-3 text-[#FF6900] backdrop-blur-sm focus-visible:outline-2 focus-visible:outline-[#FF6900] focus-visible:outline-offset-2 lg:hidden"
+        className="fixed top-6 right-6 z-40 flex h-10 items-center gap-2 rounded border border-(--c-accent-40) bg-(--c-bg-70) px-3 text-(--c-accent) backdrop-blur-sm lg:hidden"
       >
         <Menu size={16} />
         <span className="text-xs tracking-[0.2em] uppercase">Menu</span>

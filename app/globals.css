@@ -43,12 +43,61 @@
   }
 }
 
+/* -------------------------------------------------------------------------
+   Theme CSS variables — Sunset defaults (applied to :root).
+   ThemeProvider overrides these at runtime via style.setProperty().
+   To add a new theme: add its entry to lib/themes.ts only.
+   ------------------------------------------------------------------------- */
 :root {
-  --color-bg: #0B0202;
-  --color-burgundy: #790B20;
-  --color-crimson: #C90008;
-  --color-orange: #FF6900;
-  --color-amber: #FFA000;
+  /* Backgrounds */
+  --c-bg: #0B0202;
+  --c-bg-70: rgba(11, 2, 2, 0.70);
+  --c-bg-95: rgba(11, 2, 2, 0.95);
+
+  /* Text */
+  --c-text: #ffffff;
+  --c-text-muted: rgba(255, 255, 255, 0.50);
+  --c-text-dim: rgba(255, 255, 255, 0.40);
+
+  /* Primary accent */
+  --c-accent: #FF6900;
+  --c-accent-10: rgba(255, 105, 0, 0.10);
+  --c-accent-20: rgba(255, 105, 0, 0.20);
+  --c-accent-30: rgba(255, 105, 0, 0.30);
+  --c-accent-40: rgba(255, 105, 0, 0.40);
+  --c-accent-60: rgba(255, 105, 0, 0.60);
+  --c-accent-70: rgba(255, 105, 0, 0.70);
+
+  /* Secondary accent (hover) */
+  --c-accentH: #FFA000;
+  --c-accentH-60: rgba(255, 160, 0, 0.60);
+  --c-accentH-70: rgba(255, 160, 0, 0.70);
+  --c-accentH-80: rgba(255, 160, 0, 0.80);
+
+  /* Danger / indicator */
+  --c-danger: #C90008;
+
+  /* Borders */
+  --c-border: #790B20;
+  --c-border-40: rgba(121, 11, 32, 0.40);
+  --c-border-50: rgba(121, 11, 32, 0.50);
+
+  /* Gradient */
+  --c-grad-from: #C90008;
+  --c-grad-to: #FF6900;
+
+  /* Misc */
+  --c-scan: rgba(255, 105, 0, 0.10);
+  --c-scrollbar: #790B20;
+  --c-focus: #FF6900;
+  --c-grid: rgba(255, 255, 255, 0.12);
+
+  /* Legacy aliases kept for now */
+  --color-bg: var(--c-bg);
+  --color-burgundy: var(--c-border);
+  --color-crimson: var(--c-danger);
+  --color-orange: var(--c-accent);
+  --color-amber: var(--c-accentH);
 }
 
 * {
@@ -60,16 +109,17 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background: var(--color-bg);
-  color: #fff;
+  background: var(--c-bg);
+  color: var(--c-text);
   font-family: var(--font-sans);
   font-weight: 400;
+  transition: background 0.4s ease, color 0.4s ease;
 }
 
 /* Custom scrollbar for content panels */
 .overflow-y-auto {
   scrollbar-width: thin;
-  scrollbar-color: #790B20 transparent;
+  scrollbar-color: var(--c-scrollbar) transparent;
 }
 
 .overflow-y-auto::-webkit-scrollbar {
@@ -81,7 +131,7 @@ body {
 }
 
 .overflow-y-auto::-webkit-scrollbar-thumb {
-  background: #790B20;
+  background: var(--c-scrollbar);
   border-radius: 2px;
 }
 
@@ -113,8 +163,8 @@ body {
 /* Hero name — gradient slides in from left on hover */
 .hero-word {
   display: block;
-  color: white;
-  background: linear-gradient(90deg, #FF6900 0%, #FFA000 55%, #C90008 100%);
+  color: var(--c-text);
+  background: linear-gradient(90deg, var(--c-accent) 0%, var(--c-accentH) 55%, var(--c-danger) 100%);
   background-clip: text;
   -webkit-background-clip: text;
   background-size: 0% 100%;
@@ -133,7 +183,7 @@ body {
 
 /* Focus styles */
 *:focus-visible {
-  outline: 2px solid #FF6900;
+  outline: 2px solid var(--c-focus);
   outline-offset: 2px;
 }
 

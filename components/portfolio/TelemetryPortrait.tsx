@@ -7,9 +7,14 @@ import { portfolioData } from '@/lib/portfolio-data';
 import { buildDotField, loadLuminance, type DotField, type LuminanceMap } from '@/lib/halftone';
 import { useDevicePerformance } from '@/hooks/useDevicePerformance';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { useTheme } from '@/contexts/ThemeContext';
 import type { Landmark, LeaderLayout, PointerState } from './HalftonePortrait';
 
 const HalftonePortrait = dynamic(() => import('./HalftonePortrait').then((m) => m.HalftonePortrait), {
+  ssr: false,
+});
+
+const DoodlePortrait = dynamic(() => import('./DoodlePortrait').then((m) => m.DoodlePortrait), {
   ssr: false,
 });
 
@@ -110,6 +115,7 @@ export function TelemetryPortrait({
   const timecode = useTimecode();
   const tier = useDevicePerformance();
   const reducedMotion = useReducedMotion();
+  const { theme } = useTheme();
   const [webgl] = useState(() => {
     if (typeof document === 'undefined') return true;
     try {
@@ -171,7 +177,6 @@ export function TelemetryPortrait({
     });
     layout.current = { offX, offY, anchors };
 
-    // Without WebGL there is no per-frame projection, so draw static leaders.
     if (!webgl) {
       nav.forEach((n, i) => {
         const a = anchors[i];
@@ -187,7 +192,6 @@ export function TelemetryPortrait({
     measure();
     const ro = new ResizeObserver(measure);
     if (wrapRef.current) ro.observe(wrapRef.current);
-    // Buttons resize when labels wrap or fonts load, which moves the dot anchors.
     dotRefs.current.forEach((d) => d?.parentElement && ro.observe(d.parentElement));
     return () => ro.disconnect();
   }, [measure]);
@@ -222,17 +226,35 @@ export function TelemetryPortrait({
         >
           {webgl ? (
             scene && (
-              <HalftonePortrait
-                field={scene.field}
-                landmarks={scene.landmarks}
-                edges={EDGES}
-                navIdx={navIdx}
-                navLit={navLit}
-                pointer={pointer}
-                leaderLines={leaderLines}
-                layout={layout}
-                reducedMotion={reducedMotion}
-              />
+              theme.key === 'black-white' ? (
+                <DoodlePortrait
+                  field={scene.field}
+                  landmarks={scene.landmarks}
+                  edges={EDGES}
+                  navIdx={navIdx}
+                  navLit={navLit}
+                  pointer={pointer}
+                  leaderLines={leaderLines}
+                  layout={layout}
+                  reducedMotion={reducedMotion}
+                />
+              ) : (
+                <HalftonePortrait
+                  field={scene.field}
+                  landmarks={scene.landmarks}
+                  edges={EDGES}
+                  navIdx={navIdx}
+                  navLit={navLit}
+                  pointer={pointer}
+                  leaderLines={leaderLines}
+                  layout={layout}
+                  reducedMotion={reducedMotion}
+                  palette={theme.scene.portraitPalette}
+                  lineColor={theme.scene.portraitLineColor}
+                  markColor={theme.scene.portraitMarkColor}
+                  markColorLit={theme.scene.portraitMarkColorLit}
+                />
+              )
             )
           ) : (
             // eslint-disable-next-line @next/next/no-img-element
@@ -244,12 +266,12 @@ export function TelemetryPortrait({
           )}
 
           {webgl && !scene && (
-            <p className="absolute inset-0 flex items-center justify-center font-mono text-[10px] tracking-[0.3em] text-[#FFA000]/60">
+            <p className="absolute inset-0 flex items-center justify-center font-mono text-[10px] tracking-[0.3em] text-(--c-accentH-60)">
               CALIBRATING…
             </p>
           )}
 
-          <div className="telemetry-scan pointer-events-none absolute inset-x-0 h-16 bg-linear-to-b from-transparent via-[#FF6900]/10 to-transparent" />
+          <div className="telemetry-scan pointer-events-none absolute inset-x-0 h-16 bg-linear-to-b from-transparent via-(--c-scan) to-transparent" />
 
           <svg viewBox="0 0 512 512" className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden="true">
             {[[8, 8, 1, 1], [504, 8, -1, 1], [8, 504, 1, -1], [504, 504, -1, -1]].map(([x, y, dx, dy], i) => (
@@ -257,18 +279,18 @@ export function TelemetryPortrait({
                 key={i}
                 d={`M${x} ${y + dy * 28} V${y} H${x + dx * 28}`}
                 fill="none"
-                stroke="#FF6900"
+                stroke="var(--c-accent)"
                 strokeWidth={1.5}
                 opacity={0.7}
               />
             ))}
             {Array.from({ length: 15 }, (_, i) => 48 + i * 30).map((v, i) => (
-              <g key={v} stroke="#FFA000" opacity={0.35}>
+              <g key={v} stroke="var(--c-accentH)" opacity={0.35}>
                 <line x1={v} y1={8} x2={v} y2={i % 3 === 0 ? 18 : 13} />
                 <line x1={8} y1={v} x2={i % 3 === 0 ? 18 : 13} y2={v} />
               </g>
             ))}
-            <text x={40} y={34} fill="#FFA000" fontSize={11} fontFamily="Nohemi, system-ui, sans-serif" letterSpacing={1.5}>
+            <text x={40} y={34} fill="var(--c-accentH)" fontSize={11} fontFamily="Nohemi, system-ui, sans-serif" letterSpacing={1.5}>
               SUBJECT · {portfolioData.name.toUpperCase()}
             </text>
           </svg>
@@ -282,7 +304,7 @@ export function TelemetryPortrait({
                 leaderLines.current[i] = el;
               }}
               fill="none"
-              stroke={navLit[i] ? '#FFA000' : '#FF6900'}
+              stroke={navLit[i] ? 'var(--c-accentH)' : 'var(--c-accent)'}
               strokeWidth={navLit[i] ? 1.5 : 1}
               strokeOpacity={navLit[i] ? 1 : 0.55}
               strokeDasharray={navLit[i] ? undefined : '4 3'}
@@ -316,7 +338,7 @@ export function TelemetryPortrait({
               >
                 <span
                   className={`font-mono text-[10px] leading-tight sm:text-xs uppercase tracking-[0.12em] lg:tracking-[0.16em] transition-colors duration-300 ${
-                    active ? 'text-[#FF6900]' : hovered ? 'text-[#FFA000]' : 'text-white/80'
+                    active ? 'text-(--c-accent)' : hovered ? 'text-(--c-accentH)' : 'text-(--c-text-muted)'
                   }`}
                 >
                   {n.label}
@@ -327,13 +349,13 @@ export function TelemetryPortrait({
                   }}
                   className={`relative block h-2.5 w-2.5 sm:h-3 sm:w-3 shrink-0 rounded-full border transition-all duration-300 ${
                     active
-                      ? 'border-[#FF6900] bg-[#FF6900] shadow-[0_0_12px_#FF6900]'
+                      ? 'border-(--c-accent) bg-(--c-accent) shadow-[0_0_12px_var(--c-accent)]'
                       : hovered
-                        ? 'border-[#FFA000] bg-[#FFA000]/60 shadow-[0_0_10px_#FFA000]'
-                        : 'border-[#FF6900] bg-[#0B0202]'
+                        ? 'border-(--c-accentH) bg-(--c-accentH-60) shadow-[0_0_10px_var(--c-accentH)]'
+                        : 'border-(--c-accent) bg-(--c-bg)'
                   }`}
                 >
-                  <span className="telemetry-pulse absolute -inset-1.5 rounded-full border border-[#FF6900]/60" />
+                  <span className="telemetry-pulse absolute -inset-1.5 rounded-full border border-(--c-accent-60)" />
                 </span>
               </motion.button>
             );
@@ -341,12 +363,12 @@ export function TelemetryPortrait({
         </nav>
       </div>
 
-      <figcaption className="mx-[19%] sm:mx-[16%] lg:mx-[14%] mt-2 flex items-center justify-between gap-3 border-t border-[#790B20]/50 pt-2 font-mono text-[10px] tracking-[0.15em] text-white/50">
+      <figcaption className="mx-[19%] sm:mx-[16%] lg:mx-[14%] mt-2 flex items-center justify-between gap-3 border-t border-(--c-border-50) pt-2 font-mono text-[10px] tracking-[0.15em] text-(--c-text-muted)">
         <span className="flex items-center gap-1.5">
-          <span className="telemetry-blink inline-block h-1.5 w-1.5 rounded-full bg-[#C90008]" />
-          REC <span className="tabular-nums text-[#FFA000]/80">{timecode}</span>
+          <span className="telemetry-blink inline-block h-1.5 w-1.5 rounded-full bg-(--c-danger)" />
+          REC <span className="tabular-nums text-(--c-accentH-80)">{timecode}</span>
         </span>
-        <span className={tracking ? 'text-[#FFA000]' : 'text-[#FF6900]/70'}>{tracking ? 'TRACKING' : 'SCANNING'}</span>
+        <span className={tracking ? 'text-(--c-accentH)' : 'text-(--c-accent-70)'}>{tracking ? 'TRACKING' : 'SCANNING'}</span>
       </figcaption>
     </figure>
   );

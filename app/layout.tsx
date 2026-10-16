@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { Providers } from './providers';
 
 export const metadata: Metadata = {
   title: 'Ajay Dangol — Full-Stack Developer',
@@ -19,8 +20,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-[#0B0202] font-sans text-white antialiased overflow-hidden">
-        {children}
+      <body className="bg-[var(--c-bg)] font-sans text-[var(--c-text)] antialiased overflow-hidden">
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

@@ -30,13 +30,13 @@ export function CustomCursor() {
     };
 
     const onEnterInteractive = () => {
-      ringRef.current?.classList.add('scale-150', 'border-[#FF6900]');
-      ringRef.current?.classList.remove('border-[#FF6900]/40');
+      ringRef.current?.classList.add('scale-150');
+      ringRef.current?.style.setProperty('border-color', 'var(--c-accent)');
     };
 
     const onLeaveInteractive = () => {
-      ringRef.current?.classList.remove('scale-150', 'border-[#FF6900]');
-      ringRef.current?.classList.add('border-[#FF6900]/40');
+      ringRef.current?.classList.remove('scale-150');
+      ringRef.current?.style.setProperty('border-color', 'var(--c-accent-40)');
     };
 
     document.addEventListener('mousemove', onMove);
@@ -57,12 +57,12 @@ export function CustomCursor() {
     <>
       <div
         ref={dotRef}
-        className="pointer-events-none fixed top-0 left-0 z-[9999] w-1.5 h-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#FF6900]"
+        className="pointer-events-none fixed top-0 left-0 z-[9999] w-1.5 h-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--c-accent)"
         aria-hidden="true"
       />
       <div
         ref={ringRef}
-        className="pointer-events-none fixed top-0 left-0 z-[9998] w-8 h-8 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#FF6900]/40 transition-transform duration-300"
+        className="pointer-events-none fixed top-0 left-0 z-[9998] w-8 h-8 -translate-x-1/2 -translate-y-1/2 rounded-full border border-(--c-accent-40) transition-transform duration-300"
         aria-hidden="true"
       />
     </>

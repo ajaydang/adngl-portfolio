@@ -15,7 +15,7 @@ function Grid({ divisions, className }: { divisions: number; className: string }
       viewBox="0 0 100 100"
       preserveAspectRatio="none"
     >
-      <g stroke="#ffffff" strokeOpacity={0.12} strokeWidth={0.5}>
+      <g stroke="var(--c-grid, rgba(255,255,255,0.12))" strokeWidth={0.5}>
         {stops.map((p) => (
           <line key={`v${p}`} x1={p} y1={0} x2={p} y2={100} vectorEffect="non-scaling-stroke" />
         ))}
